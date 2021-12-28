@@ -1,7 +1,9 @@
+import Bot from './bot';
+
 const Tchat = class {
   constructor(bots) {
     this.el = document.querySelector('#app');
-    this.bots = bots;
+    this.bots = this.createBots(bots);
   }
 
   renderHeader() {
@@ -45,7 +47,7 @@ const Tchat = class {
               </div>
               <div class="col-2">
                   <div class="d-grid">
-                      <button class="btn btn-primary" type="button">Send</button>
+                      <button class="btn btn-primary">Send</button>
                     </div>
               </div>
             </form>
@@ -81,15 +83,17 @@ const Tchat = class {
       `;
   }
 
-  renderMessageReceived() {
+  renderMessageReceived(message) {
+    const date = new Date();
+
     return `
       <div class="row mt-2">
       <div class="col-6">
           <div class="card text-white bg-info mb-3" style="max-width: 18rem;">
               <div class="card-header">Bot</div>
               <div class="card-body bg-light">
-                <h5 class="card-title">21 dec 15h30</h5>
-                <p class="card-text">ok</p>
+                <h5 class="card-title">${date.toLocaleString()}</h5>
+                <p class="card-text">${message}</p>
               </div>
             </div>
       </div>
@@ -103,7 +107,7 @@ const Tchat = class {
   renderBotsList() {
     return `
       <section id="bots" class="col-3">
-      ${this.bots.map((bot) => this.renderBot(bot)).join('')}
+      ${this.bots.map((bot) => this.renderBot(bot.entity)).join('')}
       </section>
       `;
   }
@@ -145,10 +149,29 @@ const Tchat = class {
     buttonEL.addEventListener('click', (e) => {
       e.preventDefault();
 
+      const { value } = inputEl;
+
       messageEl.scrollTop = messageEl.scrollHeight;
-      messageEl.innerHTML += this.renderMessageSend(inputEl.value);
+      messageEl.innerHTML += this.renderMessageSend(value);
 
       inputEl.value = '';
+
+      this.searchActionByBot(value);
+    });
+  }
+
+  createBots(bots) {
+    return bots.map((bot) => new Bot(bot));
+  }
+
+  searchActionByBot(value) {
+    const messageEl = document.querySelector('#messages');
+    const actions = this.bots.map((bot) => bot.findActionByValue(value));
+
+    actions.forEach((message) => {
+      if (message) {
+        messageEl.innerHTML += this.renderMessageReceived(message);
+      }
     });
   }
 
