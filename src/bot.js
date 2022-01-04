@@ -6,8 +6,6 @@ const Bot = class {
   findActionByValue(value) {
     const { actions } = this.entity;
 
-    console.log(value);
-
     for (let i = 0; i < actions.length; i += 1) {
       const action = actions[i];
 

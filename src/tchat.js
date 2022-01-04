@@ -95,8 +95,14 @@ const Tchat = class {
       <div class="row mt-2">
       <div class="col-6">
           <div class="card text-white bg-info mb-3" style="max-width: 18rem;">
-              <img src="${avatar}" class="img-fluid rounded-circle border border-dark border-3" alt="${name}">
-              <div class="card-header">${name}</div>
+            <div class="row">
+              <div class="col-2">
+                <img src="${avatar}" class="img-fluid rounded-circle border border-dark border-3" alt="${name}">
+              </div>
+              <div class="col-10 mt-3">
+                ${name}
+              </div>
+            </div>
               <div class="card-body bg-light">
                 <h5 class="card-title">${date.toLocaleString()}</h5>
                 <p class="card-text">${message}</p>
