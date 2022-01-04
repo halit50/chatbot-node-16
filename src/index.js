@@ -16,7 +16,12 @@ const bots = [{
   id: 2,
   name: 'Zizou',
   avatar: 'https://www.foot01.com/img/images/1200x/2021/Oct/26/zidane-et-le-psg-l-info-choc-icon_ecommercefotos-ecommerce2-112591191-326643.jpg',
-  countMessage: 0
+  countMessage: 0,
+  actions: [{
+    name: 'hello',
+    keywords: ['hello', 'bonjour'],
+    action: () => 'Bonjour Halit'
+  }]
 }, {
   id: 3,
   name: 'Messi',

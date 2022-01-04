@@ -83,14 +83,20 @@ const Tchat = class {
       `;
   }
 
-  renderMessageReceived(message) {
+  renderMessageReceived(bot) {
+    const {
+      name,
+      avatar,
+      message
+    } = bot;
     const date = new Date();
 
     return `
       <div class="row mt-2">
       <div class="col-6">
           <div class="card text-white bg-info mb-3" style="max-width: 18rem;">
-              <div class="card-header">Bot</div>
+              <img src="${avatar}" class="img-fluid rounded-circle border border-dark border-3" alt="${name}">
+              <div class="card-header">${name}</div>
               <div class="card-body bg-light">
                 <h5 class="card-title">${date.toLocaleString()}</h5>
                 <p class="card-text">${message}</p>
@@ -150,13 +156,12 @@ const Tchat = class {
       e.preventDefault();
 
       const { value } = inputEl;
+      messageEl.innerHTML += this.renderMessageSend(value);
+      this.searchActionByBot(value);
 
       messageEl.scrollTop = messageEl.scrollHeight;
-      messageEl.innerHTML += this.renderMessageSend(value);
 
       inputEl.value = '';
-
-      this.searchActionByBot(value);
     });
   }
 
@@ -166,13 +171,33 @@ const Tchat = class {
 
   searchActionByBot(value) {
     const messageEl = document.querySelector('#messages');
-    const actions = this.bots.map((bot) => bot.findActionByValue(value));
+    const bots = [];
 
-    actions.forEach((message) => {
-      if (message) {
-        messageEl.innerHTML += this.renderMessageReceived(message);
+    for (let i = 0; i < this.bots.length; i += 1) {
+      const bot = this.bots[i];
+      const message = bot.findActionByValue(value);
+      const { id, name, avatar } = bot.entity;
+
+      if (!message) {
+        return message;
       }
-    });
+      bots.push({
+        id,
+        name,
+        avatar,
+        message
+      });
+    }
+
+    for (let j = 0; j < bots.length; j += 1) {
+      const item = bots[j];
+
+      if (item.message) {
+        messageEl.innerHTML += this.renderMessageReceived(item);
+      }
+    }
+
+    return true;
   }
 
   run() {
